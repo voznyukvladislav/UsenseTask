@@ -1,1 +1,47 @@
-/* You can add global styles to this file, and also import other style files */
+html {
+    width: 100%;
+    height: 100%;
+
+    padding: 0;
+    margin: 0;
+    
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    --light-color: #444444;
+    --primary-color-light: #3b3b3b;
+    --primary-color: #333333;
+    --primary-color-dark: #2b2b2b;
+    --dark-color: #222222;
+    --secondary-color: #3498db;
+    --font-color: #eeeeee;
+    --scrollbar-track-color: var(--primary-color-dark);
+    --scrollbar-thumb-color: var(--primary-color-light);
+    --scrollbar-thumb-color-hover: var(--light-color);
+
+    --big-font-size: 26px;
+    --title-font-size: 22px;
+    --font-size: 18px;
+
+    --title-font-weight: 500;
+    --font-weight: 400;
+    
+    --main-transition: all ease 0.3s;
+
+}
+body {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+.bl1 {
+    border-left: 1px solid black;
+}
+.br1 {
+    border-right: 1px solid black;
+}
+.bb1 {
+    border-bottom: 1px solid black;
+}

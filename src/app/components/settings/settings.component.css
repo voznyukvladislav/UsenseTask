@@ -1,0 +1,16 @@
+.settings-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 30%;
+    justify-content: center;
+    gap: 3px;
+}
+.description {
+    color: var(--font-color);
+    font-size: var(--title-font-size);
+}
+app-list {
+    width: 50%;
+}

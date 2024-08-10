@@ -1,0 +1,11 @@
+<div class="header-wrapper">
+    <div class="button-wrapper" [routerLink]="'/'" (mouseenter)="underline()" (mouseleave)="underline()">
+        <div class="button">Currency Exchange</div>
+        <div class="underline" [ngClass]="{'underlined': isUnderlined}"></div>
+    </div>
+    <div class="currencies-container">
+        <div class="currency" *ngFor="let value of exchangeValues">
+            {{value}}
+        </div>
+    </div>
+</div>

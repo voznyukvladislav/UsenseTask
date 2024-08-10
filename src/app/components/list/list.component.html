@@ -1,0 +1,13 @@
+<div class="list-wrapper">
+    <div class="header-wrapper" (click)="openClose()" [ngClass]="{'header-wrapper-opened': isOpenedList}">
+        <div class="title">{{item.code ? item.code + ': ' + item.name : title}}</div>
+        <img src="..\assets\arrow.png" class="icon">
+    </div>
+    <div class="items-wrapper">
+        <div class="items" [ngClass]="{'opened': isOpenedList}">
+            <div class="item br1" *ngFor="let item of list; let i = index" (click)="select(i)" [ngClass]="{'bb1': i < list.length - 1}">
+                {{i + 1}}. {{item.code}}: {{item.name}}
+            </div>
+        </div>
+    </div>
+</div>

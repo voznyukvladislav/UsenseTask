@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Constants } from './components/data/constants';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'UsenseTask';
+
+  constructor() {
+    if (!localStorage["baseCurrency"]) {
+      localStorage["baseCurrency"] = Constants.baseCurrency;
+    }
+  }
 }

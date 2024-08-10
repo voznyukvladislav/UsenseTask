@@ -1,0 +1,4 @@
+<div class="settings-wrapper">
+    <div class="description">Select base currency</div>
+    <app-list [list]="list" [item]="selectedItem" (selectCurrency)="changeBaseCurrency($event)"></app-list>
+</div>
