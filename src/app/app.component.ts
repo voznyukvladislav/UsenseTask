@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Constants } from './components/data/constants';
+import { Constants } from './data/constants';
 
 @Component({
   selector: 'app-root',

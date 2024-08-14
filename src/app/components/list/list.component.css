@@ -35,12 +35,26 @@
     border-radius: 30px 30px 0 0;
 }
 .title {
+    flex: 9;
     color: var(--font-color);
     font-size: var(--title-font-size);
 }
+.icons-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .icon {
+    -webkit-user-drag: none;
+    position: absolute;
     width: 20px;
     height: 20px;
+    transition: var(--main-transition);
+}
+.down {
+    transform: rotate(180deg);
 }
 .items-wrapper {
     position: relative;

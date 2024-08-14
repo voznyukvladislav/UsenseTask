@@ -1,16 +1,19 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ListItem } from '../data/listItem';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { ListItem } from '../../data/listItem';
 import { ExchangeService } from 'src/app/services/exchange-service/exchange.service';
+import { Subscription } from 'rxjs';
+import { EMPTY_SUBSCRIPTION } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnDestroy {
   @Input() list: ListItem[] = [];
-  @Input() item: ListItem = new ListItem();
   @Output() selectCurrency: EventEmitter<string> = new EventEmitter<string>();
+
+  resetSubscription: Subscription = EMPTY_SUBSCRIPTION;
 
   selectedItem: ListItem = new ListItem();
 
@@ -19,7 +22,7 @@ export class ListComponent implements OnInit {
   isOpenedList: boolean = false;
 
   constructor(private exchangeService: ExchangeService) {
-    this.exchangeService.reset.subscribe(
+    this.resetSubscription = this.exchangeService.reset.subscribe(
       () => {
         this.selectedItem = new ListItem();
         this.title = "Select currency...";
@@ -27,12 +30,7 @@ export class ListComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
-  }
-
   select(index: number) {
-    this.item = new ListItem();
-
     this.selectedItem = this.list[index];
     this.title = this.selectedItem.getString();
     this.openClose();
@@ -44,4 +42,7 @@ export class ListComponent implements OnInit {
     this.isOpenedList = !this.isOpenedList;
   }
 
+  ngOnDestroy(): void {
+    this.resetSubscription.unsubscribe();
+  }
 }

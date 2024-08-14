@@ -45,3 +45,9 @@ body {
 .bb1 {
     border-bottom: 1px solid black;
 }
+.opacity1 {
+    opacity: 1;
+}
+.opacity0 {
+    opacity: 0;
+}

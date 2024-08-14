@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { ListItem } from '../data/listItem';
+import { Component, OnDestroy } from '@angular/core';
+import { ListItem } from '../../data/listItem';
 import { CurrenciesService } from 'src/app/services/currencies-service/currencies.service';
-import { Subject } from 'rxjs';
+import { map, Subject, Subscription } from 'rxjs';
 import { ExchangeService } from 'src/app/services/exchange-service/exchange.service';
+import { EMPTY_SUBSCRIPTION } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-exchange',
   templateUrl: './exchange.component.html',
   styleUrls: ['./exchange.component.css']
 })
-export class ExchangeComponent implements OnInit {
+export class ExchangeComponent implements OnDestroy {
 
+  codesSubscription: Subscription = EMPTY_SUBSCRIPTION;
   list: ListItem[] = [];
 
   conversionRate: number = 0;
@@ -21,27 +23,34 @@ export class ExchangeComponent implements OnInit {
   leftCurrencyName: string = "";
   rightCurrencyName: string = "";
 
+  leftCurrencySubscription: Subscription = EMPTY_SUBSCRIPTION;
+  rightCurrencySubscription: Subscription = EMPTY_SUBSCRIPTION;
+
   leftCurrency: Subject<string> = new Subject<string>();
   rightCurrency: Subject<string> = new Subject<string>();
 
   constructor(private currenciesService: CurrenciesService, private exchangeService: ExchangeService) {
-    this.currenciesService.getCodes().subscribe(
-      (next: any) => {
-        for (let i = 0; i < next.supported_codes.length; i++) {
-          let item = new ListItem();
-          item.code = next.supported_codes[i][0];
-          item.name = next.supported_codes[i][1];
+    this.codesSubscription = this.currenciesService.getCodes()
+      .pipe(
+        map((response: any) => {
+          return response.supported_codes.map(
+            (code: any) => {
+              let item = new ListItem();
+              item.code = code[0];
+              item.name = code[1];
 
-          this.list.push(item);
-        }
-      }
-    );
+              return item;
+            }
+          )
+        })
+      )
+      .subscribe(list => this.list = list);
 
-    this.leftCurrency.subscribe(
+    this.leftCurrencySubscription = this.leftCurrency.subscribe(
       name => this.leftCurrencyName = name
     );
 
-    this.rightCurrency.subscribe(
+    this.rightCurrencySubscription = this.rightCurrency.subscribe(
       name => this.rightCurrencyName = name
     );
   }
@@ -87,7 +96,9 @@ export class ExchangeComponent implements OnInit {
     this.exchangeService.reset.next();
   }
 
-  ngOnInit(): void {
+  ngOnDestroy(): void {
+    this.codesSubscription.unsubscribe();
+    this.leftCurrencySubscription.unsubscribe();
+    this.rightCurrencySubscription.unsubscribe();
   }
-
 }

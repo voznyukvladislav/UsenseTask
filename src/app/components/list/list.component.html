@@ -1,7 +1,10 @@
 <div class="list-wrapper">
     <div class="header-wrapper" (click)="openClose()" [ngClass]="{'header-wrapper-opened': isOpenedList}">
-        <div class="title">{{item.code ? item.code + ': ' + item.name : title}}</div>
-        <img src="..\assets\arrow.png" class="icon">
+        <div class="title">{{selectedItem.code ? selectedItem.code + ': ' + selectedItem.name : title}}</div>
+        <div class="icons-container">
+            <img src="..\assets\arrow.png" class="icon down" [ngClass]="{'opacity1': !isOpenedList, 'opacity0': isOpenedList}">
+            <img src="..\assets\arrow.png" class="icon" [ngClass]="{'opacity1': isOpenedList, 'opacity0': !isOpenedList}">
+        </div>
     </div>
     <div class="items-wrapper">
         <div class="items" [ngClass]="{'opened': isOpenedList}">

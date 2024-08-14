@@ -1,43 +1,44 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CurrenciesService } from 'src/app/services/currencies-service/currencies.service';
-import { Constants } from '../data/constants';
+import { Constants } from '../../data/constants';
+import { forkJoin, switchMap, map, Subscription, from, Observable, EMPTY } from 'rxjs';
+import { EMPTY_SUBSCRIPTION } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnDestroy {
 
+  currencySubscription: Subscription = EMPTY_SUBSCRIPTION;
   baseCurrency: string = localStorage["baseCurrency"];
   isUnderlined: boolean = false;
   exchangeValues: string[] = [];
 
-  constructor(private currenciesService: CurrenciesService) {    
-    this.currenciesService.baseCurrency.subscribe(
-      newCurrency => {
-        this.exchangeValues = [];
-        this.currenciesService.latest(Constants.usd).subscribe(
-          (next: any) => {
-            let value = next.conversion_rates[`${newCurrency}`];
-            value = value.toFixed(2);
-            this.exchangeValues.push(`${Constants.usd}: ${value}`);
-
-            this.currenciesService.latest(Constants.eur).subscribe(
-              (next: any) => {
-                let value = next.conversion_rates[`${newCurrency}`];
-                value = value.toFixed(2);
-                this.exchangeValues.push(`${Constants.eur}: ${value}`);
-              }
-            );
-          }
-        );    
-        
-      }
-    );
+  constructor(private currenciesService: CurrenciesService) {
+    this.currencySubscription = this.currenciesService.baseCurrency.pipe(
+      switchMap(newCurrency => {
+        return forkJoin({
+          usdRate: this.currenciesService.latest(Constants.usd),
+          eurRate: this.currenciesService.latest(Constants.eur)
+        })
+        .pipe(
+          map((results: any) => {
+            let usdValue = results.usdRate.conversion_rates[`${newCurrency}`].toFixed(2);
+            let eurValue = results.eurRate.conversion_rates[`${newCurrency}`].toFixed(2);
+            return [
+              `${Constants.usd}: ${usdValue}`,
+              `${Constants.eur}: ${eurValue}`
+            ];
+          })
+        );
+      })
+    ).subscribe(exchangeValues => this.exchangeValues = exchangeValues);
   }
 
-  ngOnInit(): void {
+  ngOnDestroy(): void {
+    this.currencySubscription.unsubscribe();
   }
 
   underline() {

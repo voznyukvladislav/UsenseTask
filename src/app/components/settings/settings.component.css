@@ -7,10 +7,16 @@
     justify-content: center;
     gap: 3px;
 }
+.settings-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
 .description {
     color: var(--font-color);
     font-size: var(--title-font-size);
 }
 app-list {
-    width: 50%;
+    width: 100%;
 }

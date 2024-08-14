@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Api } from 'src/app/components/data/api';
-import { Constants } from 'src/app/components/data/constants';
+import { Api } from 'src/app/data/api';
+import { Constants } from 'src/app/data/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,12 @@ export class CurrenciesService {
         localStorage["baseCurrency"] = this.baseCurrencyValue;
       } 
     );
+  }
+
+  changeBaseCurrency(newCode: string) {
+    this.baseCurrencyValue = newCode;
+    this.baseCurrency.next(newCode);
+    localStorage["baseCurrency"] = newCode;
   }
 
   getCodes() {

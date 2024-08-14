@@ -1,43 +1,51 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CurrenciesService } from 'src/app/services/currencies-service/currencies.service';
-import { ListItem } from '../data/listItem';
-import { Constants } from '../data/constants';
+import { ListItem } from '../../data/listItem';
+import { Constants } from '../../data/constants';
+import { map, Subscription } from 'rxjs';
+import { EMPTY_SUBSCRIPTION } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnDestroy {
+
+  currencyCodesSubscription: Subscription = EMPTY_SUBSCRIPTION;
+  baseCurrencySubscription: Subscription = EMPTY_SUBSCRIPTION;
 
   list: ListItem[] = [];
   selectedItem: ListItem = new ListItem();
 
+  baseCurrency: string = "";
+
   constructor(private currenciesService: CurrenciesService) {
-    this.currenciesService.getCodes().subscribe(
-      (next: any) => {
-        for (let i = 0; i < next.supported_codes.length; i++) {
-          let item = new ListItem();
-          item.code = next.supported_codes[i][0];
-          item.name = next.supported_codes[i][1];
+    this.currencyCodesSubscription = this.currenciesService.getCodes()
+      .pipe(
+        map((response: any) => {
+          return response.supported_codes.map((code: any) => {
+            let item = new ListItem();
+            item.code = code[0];
+            item.name = code[1];
 
-          this.list.push(item);
+            return item;
+          })
+        })
+      )
+      .subscribe(list => this.list = list);
 
-          if (next.supported_codes[i][0] == localStorage["baseCurrency"]) {
-            this.selectedItem = new ListItem();
-            this.selectedItem.code = next.supported_codes[i][0];
-            this.selectedItem.name = next.supported_codes[i][1];
-          }
-        }
-      }
-    );
+      this.baseCurrencySubscription = this.currenciesService.baseCurrency.subscribe(
+        currency => this.baseCurrency = currency
+      );
   }
 
   changeBaseCurrency(code: string) {
-    this.currenciesService.baseCurrency.next(code);
-    localStorage["baseCurrency"] = code;
+    this.currenciesService.changeBaseCurrency(code);
   }
 
-  ngOnInit(): void {
+  ngOnDestroy(): void {
+    this.currencyCodesSubscription.unsubscribe();
+    this.baseCurrencySubscription.unsubscribe();
   }
 }
