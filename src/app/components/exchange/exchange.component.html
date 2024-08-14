@@ -1,7 +1,6 @@
 <div class="exchange-wrapper">
     <form class="exchange-container" [formGroup]="form">
         <div class="exchange-item">
-            <!-- <input type="number" class="input" min="0" placeholder="Enter value..." [(ngModel)]="leftValue" (input)="updateRight()"> -->
             <app-input [formControlName]="'leftValue'"></app-input>
             <app-list [list]="list" [formControlName]="'leftCurrency'"></app-list>
         </div>
@@ -10,8 +9,7 @@
                 <div class="button" >Reset</div>
             </div>
         </div>
-        <div class="exchange-item">
-            <!-- <input type="number" class="input" min="0" placeholder="Enter value..." [(ngModel)]="rightValue" (input)="updateLeft()"> -->
+        <div class="exchange-item">\
             <app-input [formControlName]="'rightValue'"></app-input>
             <app-list [list]="list" [formControlName]="'rightCurrency'"></app-list>
         </div>
