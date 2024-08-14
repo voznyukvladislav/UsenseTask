@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CurrenciesService } from 'src/app/services/currencies-service/currencies.service';
 import { ListItem } from '../../data/listItem';
-import { Constants } from '../../data/constants';
 import { map, Subscription } from 'rxjs';
 import { EMPTY_SUBSCRIPTION } from 'rxjs/internal/Subscription';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-settings',
@@ -11,17 +11,19 @@ import { EMPTY_SUBSCRIPTION } from 'rxjs/internal/Subscription';
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnDestroy {
+  public form: FormGroup = new FormGroup({
+    "baseCurrency": new FormControl()
+  });
+  
+  public list: ListItem[] = [];
+  public baseCurrency: string = ""; 
 
-  currencyCodesSubscription: Subscription = EMPTY_SUBSCRIPTION;
-  baseCurrencySubscription: Subscription = EMPTY_SUBSCRIPTION;
-
-  list: ListItem[] = [];
-  selectedItem: ListItem = new ListItem();
-
-  baseCurrency: string = "";
+  private currencyCodes$: Subscription = EMPTY_SUBSCRIPTION;
+  private baseCurrency$: Subscription = EMPTY_SUBSCRIPTION;
+  private baseCurrencySettings$: Subscription = EMPTY_SUBSCRIPTION;
 
   constructor(private currenciesService: CurrenciesService) {
-    this.currencyCodesSubscription = this.currenciesService.getCodes()
+    this.currencyCodes$ = this.currenciesService.getCodes()
       .pipe(
         map((response: any) => {
           return response.supported_codes.map((code: any) => {
@@ -35,9 +37,11 @@ export class SettingsComponent implements OnDestroy {
       )
       .subscribe(list => this.list = list);
 
-      this.baseCurrencySubscription = this.currenciesService.baseCurrency.subscribe(
+      this.baseCurrency$ = this.currenciesService.baseCurrency.subscribe(
         currency => this.baseCurrency = currency
       );
+
+      this.baseCurrencySettings$ = this.form.controls['baseCurrency'].valueChanges.subscribe(newBaseCurrency => this.changeBaseCurrency(newBaseCurrency));
   }
 
   changeBaseCurrency(code: string) {
@@ -45,7 +49,8 @@ export class SettingsComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.currencyCodesSubscription.unsubscribe();
-    this.baseCurrencySubscription.unsubscribe();
+    this.currencyCodes$.unsubscribe();
+    this.baseCurrency$.unsubscribe();
+    this.baseCurrencySettings$.unsubscribe();
   }
 }

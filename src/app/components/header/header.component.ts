@@ -11,10 +11,11 @@ import { EMPTY_SUBSCRIPTION } from 'rxjs/internal/Subscription';
 })
 export class HeaderComponent implements OnDestroy {
 
-  currencySubscription: Subscription = EMPTY_SUBSCRIPTION;
-  baseCurrency: string = localStorage["baseCurrency"];
-  isUnderlined: boolean = false;
-  exchangeValues: string[] = [];
+  public isUnderlined: boolean = false;
+  public exchangeValues: string[] = [];
+
+  private currencySubscription: Subscription = EMPTY_SUBSCRIPTION;
+  private baseCurrency: string = localStorage["baseCurrency"];
 
   constructor(private currenciesService: CurrenciesService) {
     this.currencySubscription = this.currenciesService.baseCurrency.pipe(

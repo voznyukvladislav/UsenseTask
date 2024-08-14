@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 })
 export class ExchangeService {
 
-  reset: Subject<void> = new Subject();
+  public reset: Subject<void> = new Subject();
 
   constructor() { }
 }

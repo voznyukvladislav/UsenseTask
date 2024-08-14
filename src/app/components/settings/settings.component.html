@@ -1,7 +1,7 @@
 <div class="settings-wrapper">
-    <div class="settings-container">
+    <form [formGroup]="form" class="settings-container">
         <div class="description">Base currency selection</div>
         <div class="description">Current base currency: {{baseCurrency}}</div>
-        <app-list [list]="list" (selectCurrency)="changeBaseCurrency($event)"></app-list>
-    </div>
+        <app-list [list]="list" [formControlName]="'baseCurrency'"></app-list>
+    </form>
 </div>

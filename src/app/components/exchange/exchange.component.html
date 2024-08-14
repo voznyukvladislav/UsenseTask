@@ -1,17 +1,19 @@
 <div class="exchange-wrapper">
-    <div class="exchange-container">
+    <form class="exchange-container" [formGroup]="form">
         <div class="exchange-item">
-            <input type="number" class="input" min="0" placeholder="Enter value..." [(ngModel)]="leftValue" (input)="updateRight()">
-            <app-list [list]="list" (selectCurrency)="selectLeftCurrency($event)"></app-list>
+            <!-- <input type="number" class="input" min="0" placeholder="Enter value..." [(ngModel)]="leftValue" (input)="updateRight()"> -->
+            <app-input [formControlName]="'leftValue'"></app-input>
+            <app-list [list]="list" [formControlName]="'leftCurrency'"></app-list>
         </div>
         <div class="buttons-wrapper">
-            <div class="button-wrapper">
-                <div class="button" (click)="reset()">Reset</div>
+            <div class="button-wrapper" (click)="reset()">
+                <div class="button" >Reset</div>
             </div>
         </div>
         <div class="exchange-item">
-            <input type="number" class="input" min="0" placeholder="Enter value..." [(ngModel)]="rightValue" (input)="updateLeft()">
-            <app-list [list]="list" (selectCurrency)="selectRightCurrency($event)"></app-list>
+            <!-- <input type="number" class="input" min="0" placeholder="Enter value..." [(ngModel)]="rightValue" (input)="updateLeft()"> -->
+            <app-input [formControlName]="'rightValue'"></app-input>
+            <app-list [list]="list" [formControlName]="'rightCurrency'"></app-list>
         </div>
-    </div>
+    </form>
 </div>

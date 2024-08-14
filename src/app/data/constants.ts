@@ -1,6 +1,6 @@
 export class Constants {
-    static baseCurrency: string = "UAH";
+    public static baseCurrency: string = "UAH";
     
-    static usd: string = "USD";
-    static eur: string = "EUR";
+    public static usd: string = "USD";
+    public static eur: string = "EUR";
 }
